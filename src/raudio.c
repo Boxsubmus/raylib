@@ -1832,31 +1832,40 @@ void SeekMusicStream(Music music, float position)
 
     unsigned int positionInFrames = (unsigned int)(position*music.stream.sampleRate);
 
+    SeekMusicStreamFrame(music, positionInFrames);
+}
+
+// Seek music to a frame
+void SeekMusicStreamFrame(Music music, unsigned int positionInFrames)
+{
+    // Seeking is not supported in module formats
+    if ((music.ctxType == MUSIC_MODULE_XM) || (music.ctxType == MUSIC_MODULE_MOD)) return;
+
     switch (music.ctxType)
     {
 #if defined(SUPPORT_FILEFORMAT_WAV)
-        case MUSIC_AUDIO_WAV: drwav_seek_to_pcm_frame((drwav *)music.ctxData, positionInFrames); break;
+    case MUSIC_AUDIO_WAV: drwav_seek_to_pcm_frame((drwav*)music.ctxData, positionInFrames); break;
 #endif
 #if defined(SUPPORT_FILEFORMAT_OGG)
-        case MUSIC_AUDIO_OGG: stb_vorbis_seek_frame((stb_vorbis *)music.ctxData, positionInFrames); break;
+    case MUSIC_AUDIO_OGG: stb_vorbis_seek_frame((stb_vorbis*)music.ctxData, positionInFrames); break;
 #endif
 #if defined(SUPPORT_FILEFORMAT_MP3)
-        case MUSIC_AUDIO_MP3: drmp3_seek_to_pcm_frame((drmp3 *)music.ctxData, positionInFrames); break;
+    case MUSIC_AUDIO_MP3: drmp3_seek_to_pcm_frame((drmp3*)music.ctxData, positionInFrames); break;
 #endif
 #if defined(SUPPORT_FILEFORMAT_QOA)
-        case MUSIC_AUDIO_QOA:
-        {
-            int qoaFrame = positionInFrames/QOA_FRAME_LEN;
-            qoaplay_seek_frame((qoaplay_desc *)music.ctxData, qoaFrame); // Seeks to QOA frame, not PCM frame
+    case MUSIC_AUDIO_QOA:
+    {
+        int qoaFrame = positionInFrames / QOA_FRAME_LEN;
+        qoaplay_seek_frame((qoaplay_desc*)music.ctxData, qoaFrame); // Seeks to QOA frame, not PCM frame
 
-            // We need to compute QOA frame number and update positionInFrames
-            positionInFrames = ((qoaplay_desc *)music.ctxData)->sample_position;
-        } break;
+        // We need to compute QOA frame number and update positionInFrames
+        positionInFrames = ((qoaplay_desc*)music.ctxData)->sample_position;
+    } break;
 #endif
 #if defined(SUPPORT_FILEFORMAT_FLAC)
-        case MUSIC_AUDIO_FLAC: drflac_seek_to_pcm_frame((drflac *)music.ctxData, positionInFrames); break;
+    case MUSIC_AUDIO_FLAC: drflac_seek_to_pcm_frame((drflac*)music.ctxData, positionInFrames); break;
 #endif
-        default: break;
+    default: break;
     }
 
     ma_mutex_lock(&AUDIO.System.lock);
@@ -2099,6 +2108,42 @@ float GetMusicTimePlayed(Music music)
     }
 
     return secondsPlayed;
+}
+
+// Get current music frame
+unsigned int GetMusicFrame(Music music)
+{
+    int framesPlayed = 0;
+    if (music.stream.buffer != NULL)
+    {
+#if defined(SUPPORT_FILEFORMAT_XM)
+        if (music.ctxType == MUSIC_MODULE_XM)
+        {
+            uint64_t framesPlayed = 0;
+
+            jar_xm_get_position(music.ctxData, NULL, NULL, NULL, &framesPlayed);
+        }
+        else
+#endif
+        {
+            ma_mutex_lock(&AUDIO.System.lock);
+            //ma_uint32 frameSizeInBytes = ma_get_bytes_per_sample(music.stream.buffer->dsp.formatConverterIn.config.formatIn)*music.stream.buffer->dsp.formatConverterIn.config.channels;
+            int framesProcessed = (int)music.stream.buffer->framesProcessed;
+            int subBufferSize = (int)music.stream.buffer->sizeInFrames / 2;
+            int framesInFirstBuffer = music.stream.buffer->isSubBufferProcessed[0] ? 0 : subBufferSize;
+            int framesInSecondBuffer = music.stream.buffer->isSubBufferProcessed[1] ? 0 : subBufferSize;
+            int framesInBuffers = framesInFirstBuffer + framesInSecondBuffer;
+            if ((unsigned int)framesInBuffers > music.frameCount) {
+                if (!music.looping) framesInBuffers = music.frameCount;
+            }
+            int framesSentToMix = music.stream.buffer->frameCursorPos % subBufferSize;
+            int framesPlayed = (framesProcessed - framesInBuffers + framesSentToMix) % (int)music.frameCount;
+            if (framesPlayed < 0) framesPlayed += music.frameCount;
+            ma_mutex_unlock(&AUDIO.System.lock);
+        }
+    }
+
+    return framesPlayed;
 }
 
 // Load audio stream (to stream audio pcm data)

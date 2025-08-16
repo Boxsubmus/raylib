@@ -1680,11 +1680,13 @@ RLAPI void StopMusicStream(Music music);                              // Stop mu
 RLAPI void PauseMusicStream(Music music);                             // Pause music playing
 RLAPI void ResumeMusicStream(Music music);                            // Resume playing paused music
 RLAPI void SeekMusicStream(Music music, float position);              // Seek music to a position (in seconds)
+RLAPI void SeekMusicStreamFrame(Music music, unsigned int frame);     // Seek music to a frame
 RLAPI void SetMusicVolume(Music music, float volume);                 // Set volume for music (1.0 is max level)
 RLAPI void SetMusicPitch(Music music, float pitch);                   // Set pitch for a music (1.0 is base level)
 RLAPI void SetMusicPan(Music music, float pan);                       // Set pan for a music (0.5 is center)
 RLAPI float GetMusicTimeLength(Music music);                          // Get music time length (in seconds)
 RLAPI float GetMusicTimePlayed(Music music);                          // Get current music time played (in seconds)
+RLAPI unsigned int GetMusicFrame(Music music);                        // Get current music frame
 
 // AudioStream management functions
 RLAPI AudioStream LoadAudioStream(unsigned int sampleRate, unsigned int sampleSize, unsigned int channels); // Load audio stream (to stream raw audio pcm data)

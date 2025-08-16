@@ -1,0 +1,65 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "dll",
+      "displayName": "Raylib DLL Build",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/build/dll",
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "ON",
+        "CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS": "ON",
+        "BUILD_EXAMPLES": "OFF",
+        "BUILD_GAMES": "OFF",
+        "BUILD_TESTING": "OFF",
+        "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/raylib-beef/raylib-beef/libs/libs_x64",
+        "CMAKE_LIBRARY_OUTPUT_DIRECTORY": "${sourceDir}/raylib-beef/raylib-beef/libs/libs_x64",
+        "CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "${sourceDir}/raylib-beef/raylib-beef/libs/libs_x64",
+        "CMAKE_PROJECT_raylib_INCLUDE": "${sourceDir}/rename-dll.cmake"
+      }
+    },
+    {
+      "name": "static",
+      "displayName": "Raylib Static Build",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/build/static",
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "OFF",
+        "BUILD_EXAMPLES": "OFF",
+        "BUILD_GAMES": "OFF",
+        "BUILD_TESTING": "OFF",
+        "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/raylib-beef/raylib-beef/libs/libs_x64",
+        "CMAKE_LIBRARY_OUTPUT_DIRECTORY": "${sourceDir}/raylib-beef/raylib-beef/libs/libs_x64",
+        "CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "${sourceDir}/raylib-beef/raylib-beef/libs/libs_x64",
+        "CMAKE_PROJECT_raylib_INCLUDE": "${sourceDir}/rename-static.cmake"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "dll-release",
+      "configurePreset": "dll",
+      "configuration": "Release"
+    },
+    {
+      "name": "dll-debug",
+      "configurePreset": "dll",
+      "configuration": "Debug"
+    },
+    {
+      "name": "static-release",
+      "configurePreset": "static",
+      "configuration": "Release"
+    },
+    {
+      "name": "static-debug",
+      "configurePreset": "static",
+      "configuration": "Debug"
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+FileVersion = 1
+Dependencies = {corlib = "*", corlib = "*"}
+
+[Project]
+Name = "raylib-beef"
+TargetType = "BeefLib"
+StartupObject = "beef.Program"
+DefaultNamespace = "Raylib"
+
+[Configs.Debug.Win64]
+CLibType = "DynamicDebug"
+LibPaths = ["$(ProjectDir)\\libs\\libs_x64\\Debug\\raylibdll.lib"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/libs_x64/Debug/*.dll\")"]
+
+[Configs.Debug.wasm32]
+OtherLinkFlags = "$(LinkFlags) -s USE_GLFW=3"
+LibPaths = ["$(ProjectDir)\\libs\\wasm\\libraylib.a"]
+
+[Configs.Debug.Linux64]
+CLibType = "DynamicDebug"
+LibPaths = ["$(ProjectDir)\\libs\\linux_x64\\libraylib.so.550"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/linux_x64/*.so.550\")"]
+
+[Configs.Release.Win64]
+CLibType = "Dynamic"
+LibPaths = ["$(ProjectDir)\\libs\\libs_x64\\Release\\raylibdll.lib"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/libs_x64/Release*.dll\")"]
+
+[Configs.Release.wasm32]
+OtherLinkFlags = "$(LinkFlags) -s USE_GLFW=3"
+LibPaths = ["$(ProjectDir)\\libs\\wasm\\libraylib.a"]
+
+[Configs.Release.Linux64]
+CLibType = "Dynamic"
+LibPaths = ["$(ProjectDir)\\libs\\linux_x64\\libraylib.so.550"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/linux_x64/*.so.550\")"]
+
+[Configs.Paranoid.Win64]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/libs_x64/*.dll\")"]
+
+[Configs.Test.Win64]
+LibPaths = ["$(ProjectDir)\\libs\\libs_x64\\raylibdll.lib"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/libs_x64/*.dll\")"]
+
+[Configs.Test.Linux64]
+LibPaths = ["$(ProjectDir)\\libs\\_x64\\libraylib.so.550"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/linux_x64/*.so.550\")"]
+
+[Configs.StaticDebug.Linux64]
+LibPaths = ["$(ProjectDir)\\libs\\linux_x64\\libraylib.a"]
+
+[Configs.StaticDebug.Win64]
+OtherLinkFlags = "$(LinkFlags) -libpath:\"$(ProjectDir)/libs/libs_x64\""
+LibPaths = ["$(ProjectDir)\\libs\\libs_x64\\Debug\\staticraylib.lib", "user32.lib", "gdi32.lib", "windowsapp.lib", "shell32.lib"]
+
+[Configs.StaticRelease.Linux64]
+LibPaths = ["$(ProjectDir)\\libs\\linux_x64\\libraylib.a"]
+
+[Configs.StaticRelease.Win64]
+OtherLinkFlags = "$(LinkFlags) -libpath:\"$(ProjectDir)/libs/libs_x64\""
+LibPaths = ["$(ProjectDir)\\libs\\libs_x64\\Release\\staticraylib.lib", "user32.lib", "gdi32.lib", "windowsapp.lib", "shell32.lib"]
+
+[Configs.StaticTest.Linux64]
+LibPaths = ["$(ProjectDir)\\libs\\_x64\\libraylib.a"]
+
+[Configs.StaticTest.Win64]
+OtherLinkFlags = "$(LinkFlags) -libpath:\"$(ProjectDir)/libs/libs_x64\""
+LibPaths = ["$(ProjectDir)\\libs\\libs_x64\\staticraylib.lib", "user32.lib", "gdi32.lib", "windowsapp.lib", "shell32.lib"]
+
+[Configs.Debug_GL43.Win64]
+CLibType = "DynamicDebug"
+LibPaths = ["$(ProjectDir)\\libs\\libs_x64_gl43\\raylibdll.lib"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/libs_x64_gl43/*.dll\")"]
+
+[Configs.Release_GL43.Win64]
+CLibType = "Dynamic"
+LibPaths = ["$(ProjectDir)\\libs\\libs_x64_gl43\\raylibdll.lib"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/libs_x64_gl43/*.dll\")"]
+
+[Configs.Paranoid_GL43.Win64]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/libs_x64_gl43/*.dll\")"]
+
+[Configs.Test_GL43.Win64]
+LibPaths = ["$(ProjectDir)\\libs\\libs_x64_gl43\\raylibdll.lib"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/libs_x64_gl43/*.dll\")"]
