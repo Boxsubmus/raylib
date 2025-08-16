@@ -1,5 +1,5 @@
 FileVersion = 1
-Dependencies = {corlib = "*", corlib = "*"}
+Dependencies = {corlib = "*", corlib = "*", corlib = "*"}
 
 [Project]
 Name = "raylib-beef"
@@ -24,7 +24,7 @@ PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/linux_x64/*.so.550\")"]
 [Configs.Release.Win64]
 CLibType = "Dynamic"
 LibPaths = ["$(ProjectDir)\\libs\\libs_x64\\Release\\raylibdll.lib"]
-PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/libs_x64/Release*.dll\")"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/libs/libs_x64/Release/*.dll\")"]
 
 [Configs.Release.wasm32]
 OtherLinkFlags = "$(LinkFlags) -s USE_GLFW=3"
