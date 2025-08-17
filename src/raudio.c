@@ -1912,6 +1912,12 @@ void UpdateMusicStream(Music music)
     if (music.stream.buffer == NULL) return;
     if (!music.stream.buffer->playing) return;
 
+    // @PELLY MOD BEGIN
+    // Idk why, but this enters an infinite loop if this is ever 0.
+    // I assume because a sample is too short or something? So there's probably a better way to do this.. but I'm not sure.
+    if (music.frameCount == 0) return;
+    // @PELLY MOD END
+
     ma_mutex_lock(&AUDIO.System.lock);
 
     unsigned int subBufferSizeInFrames = music.stream.buffer->sizeInFrames/2;
