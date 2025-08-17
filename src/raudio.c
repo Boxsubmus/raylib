@@ -2448,6 +2448,14 @@ static ma_uint32 ReadAudioBufferFramesInInternalFormat(AudioBuffer *audioBuffer,
         return frameCount;
     }
 
+    // @PELLY MOD BEGIN
+    // Prevents a crash if the audio buffer is empty, can't divide by zero :/
+    if (audioBuffer->sizeInFrames == 0)
+    {
+        return frameCount;
+    }
+    // @PELLY MOD END
+
     ma_uint32 subBufferSizeInFrames = (audioBuffer->sizeInFrames > 1)? audioBuffer->sizeInFrames/2 : audioBuffer->sizeInFrames;
     ma_uint32 currentSubBufferIndex = audioBuffer->frameCursorPos/subBufferSizeInFrames;
 
