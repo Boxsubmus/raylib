@@ -293,6 +293,11 @@ typedef struct RenderTexture {
 // RenderTexture2D, same as RenderTexture
 typedef RenderTexture RenderTexture2D;
 
+//
+typedef struct CustomCursor {
+    void* cursorObj;
+} CustomCursor;
+
 // NPatchInfo, n-patch layout info
 typedef struct NPatchInfo {
     Rectangle source;       // Texture source rectangle
@@ -1212,6 +1217,9 @@ RLAPI void SetMouseScale(float scaleX, float scaleY);         // Set mouse scali
 RLAPI float GetMouseWheelMove(void);                          // Get mouse wheel movement for X or Y, whichever is larger
 RLAPI Vector2 GetMouseWheelMoveV(void);                       // Get mouse wheel movement for both X and Y
 RLAPI void SetMouseCursor(int cursor);                        // Set mouse cursor
+RLAPI void SetMouseCursorEx(CustomCursor cursor);
+RLAPI CustomCursor LoadMouseCursorFromImage(Image image);
+RLAPI void UnloadMouseCursor(CustomCursor cursor);
 
 // Input-related functions: touch
 RLAPI int GetTouchX(void);                                    // Get touch position X for touch point 0 (relative to screen size)

@@ -629,6 +629,17 @@
       ]
     },
     {
+      "name": "CustomCursor",
+      "description": "",
+      "fields": [
+        {
+          "type": "void*",
+          "name": "cursorObj",
+          "description": ""
+        }
+      ]
+    },
+    {
       "name": "NPatchInfo",
       "description": "NPatchInfo, n-patch layout info",
       "fields": [
@@ -5201,6 +5212,39 @@
       "params": [
         {
           "type": "int",
+          "name": "cursor"
+        }
+      ]
+    },
+    {
+      "name": "SetMouseCursorEx",
+      "description": "",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "CustomCursor",
+          "name": "cursor"
+        }
+      ]
+    },
+    {
+      "name": "LoadMouseCursorFromImage",
+      "description": "",
+      "returnType": "CustomCursor",
+      "params": [
+        {
+          "type": "Image",
+          "name": "image"
+        }
+      ]
+    },
+    {
+      "name": "UnloadMouseCursor",
+      "description": "",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "CustomCursor",
           "name": "cursor"
         }
       ]

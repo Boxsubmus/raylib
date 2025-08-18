@@ -1160,6 +1160,32 @@ void SetMouseCursor(int cursor)
     }
 }
 
+void SetMouseCursorEx(CustomCursor cursor)
+{
+    glfwSetCursor(platform.handle, cursor.cursorObj);
+}
+
+CustomCursor LoadMouseCursorFromImage(Image image)
+{
+    CustomCursor ret = { 0 };
+
+    GLFWimage glfwimage = { 0 };
+    glfwimage.width = image.width;
+    glfwimage.height = image.height;
+    glfwimage.pixels = (unsigned char*)image.data;
+
+    ret.cursorObj = glfwCreateCursor(&glfwimage, 0, 0);
+
+    return ret;
+}
+
+void UnloadMouseCursor(CustomCursor cursor)
+{
+    if (cursor.cursorObj == NULL) return;
+
+    glfwDestroyCursor(cursor.cursorObj);
+}
+
 // Get physical key name
 const char *GetKeyName(int key)
 {

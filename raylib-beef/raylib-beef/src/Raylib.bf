@@ -1400,6 +1400,18 @@ public static class Raylib
 	[CLink]
 	public static extern void PlayAutomationEvent(AutomationEvent event);
 	
+	/// 
+	[CLink]
+	public static extern void SetMouseCursorEx(CustomCursor cursor);
+	
+	/// 
+	[CLink]
+	public static extern CustomCursor LoadMouseCursorFromImage(Image image);
+	
+	/// 
+	[CLink]
+	public static extern void UnloadMouseCursor(CustomCursor cursor);
+	
 	/// Update camera movement/rotation
 	[CLink]
 	public static extern void UpdateCameraPro(Camera *camera, Vector3 movement, Vector3 rotation, float zoom);
@@ -2739,6 +2751,33 @@ public static class Raylib
 	}
 	[LinkName("PlayAutomationEvent")]
 	private static extern void PlayAutomationEvent_Impl(in AutomationEvent event);
+	
+	/// 
+	[Inline]
+	public static void SetMouseCursorEx(CustomCursor cursor)
+	{
+		SetMouseCursorEx_Impl(cursor);
+	}
+	[LinkName("SetMouseCursorEx")]
+	private static extern void SetMouseCursorEx_Impl(in CustomCursor cursor);
+	
+	/// 
+	[Inline]
+	public static CustomCursor LoadMouseCursorFromImage(Image image)
+	{
+		return LoadMouseCursorFromImage_Impl(image);
+	}
+	[LinkName("LoadMouseCursorFromImage")]
+	private static extern CustomCursor LoadMouseCursorFromImage_Impl(in Image image);
+	
+	/// 
+	[Inline]
+	public static void UnloadMouseCursor(CustomCursor cursor)
+	{
+		UnloadMouseCursor_Impl(cursor);
+	}
+	[LinkName("UnloadMouseCursor")]
+	private static extern void UnloadMouseCursor_Impl(in CustomCursor cursor);
 	
 	/// Update camera movement/rotation
 	[Inline]

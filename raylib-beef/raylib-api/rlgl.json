@@ -713,8 +713,8 @@
         },
         {
           "type": "#if defined(GRAPHICS_API_OPENGL_11) || defined(GRAPHICS_API_OPENunsigned int *",
-          "name": "rlVertexBuffer",
-          "description": ""
+          "name": "vaoId",
+          "description": "OpenGL Vertex Array Object id"
         },
         {
           "type": "unsigned int *",
@@ -723,28 +723,13 @@
         },
         {
           "type": "#endif",
+          "name": "vaoId",
+          "description": "OpenGL Vertex Array Object id"
+        },
+        {
+          "type": "#if defined(GRAPHICS_API_OPENGL_ES2)",
           "name": "indices",
           "description": "Vertex indices (in case vertex data comes indexed) (6 indices per quad)"
-        },
-        {
-          "type": "#if defined(GRAPHICS_API_OPENGL_ES2)",
-          "name": "m2",
-          "description": "Matrix third row (4 components)"
-        },
-        {
-          "type": "#if defined(GRAPHICS_API_OPENGL_ES2)",
-          "name": "m6",
-          "description": "Matrix third row (4 components)"
-        },
-        {
-          "type": "#if defined(GRAPHICS_API_OPENGL_ES2)",
-          "name": "m10",
-          "description": "Matrix third row (4 components)"
-        },
-        {
-          "type": "#if defined(GRAPHICS_API_OPENGL_ES2)",
-          "name": "m14",
-          "description": "Matrix third row (4 components)"
         },
         {
           "type": "unsigned short *",
@@ -753,8 +738,8 @@
         },
         {
           "type": "#endif",
-          "name": "vaoId",
-          "description": "OpenGL Vertex Array Object id"
+          "name": "rlVertexBuffer",
+          "description": ""
         },
         {
           "type": "unsigned int",
