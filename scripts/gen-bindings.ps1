@@ -48,13 +48,13 @@ if (-not (Test-Path $generatorProj)) {
     exit 1
 }
 
-Write-Host "`nBuilding C# generator project..."
-& dotnet build $generatorProj -c Release
-
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "Failed to build generator.csproj"
-    exit 1
-}
+#Write-Host "`nBuilding C# generator project..."
+#& dotnet build $generatorProj -c Release
+#
+#if ($LASTEXITCODE -ne 0) {
+#    Write-Error "Failed to build generator.csproj"
+#    exit 1
+#}
 
 Write-Host "Running C# generator project..."
 & dotnet run --project $generatorProj -c Release
