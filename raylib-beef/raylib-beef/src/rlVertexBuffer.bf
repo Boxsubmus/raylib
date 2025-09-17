@@ -21,28 +21,24 @@ public struct rlVertexBuffer
 	/// Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
 	public void* colors;
 	
-	/// OpenGL Vertex Array Object id
-	public void* vaoId;
-	
 	/// Vertex indices (in case vertex data comes indexed) (6 indices per quad)
 	public void* indices;
 	
-	/// 
-	public void* rlVertexBuffer;
+	/// OpenGL Vertex Array Object id
+	public int32 vaoId;
 	
 	/// OpenGL Vertex Buffer Objects id (5 types of vertex data)
 	public int32[5] vboId;
 	
-	public this(int32 elementCount, void* vertices, void* texcoords, void* normals, void* colors, void* vaoId, void* indices, void* rlVertexBuffer, int32[5] vboId)
+	public this(int32 elementCount, void* vertices, void* texcoords, void* normals, void* colors, void* indices, int32 vaoId, int32[5] vboId)
 	{
 		this.elementCount = elementCount;
 		this.vertices = vertices;
 		this.texcoords = texcoords;
 		this.normals = normals;
 		this.colors = colors;
-		this.vaoId = vaoId;
 		this.indices = indices;
-		this.rlVertexBuffer = rlVertexBuffer;
+		this.vaoId = vaoId;
 		this.vboId = vboId;
 	}
 }

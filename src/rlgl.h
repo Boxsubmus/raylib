@@ -388,12 +388,16 @@ typedef struct rlVertexBuffer {
     float *texcoords;           // Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
     float *normals;             // Vertex normal (XYZ - 3 components per vertex) (shader-location = 2)
     unsigned char *colors;      // Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-#if defined(GRAPHICS_API_OPENGL_11) || defined(GRAPHICS_API_OPENGL_33)
+
+    // @PELLY
+    // This was causing problems for the generator.
+    // I think it's fine commenting these out because we'll never use ES2
+//#if defined(GRAPHICS_API_OPENGL_11) || defined(GRAPHICS_API_OPENGL_33)
     unsigned int *indices;      // Vertex indices (in case vertex data comes indexed) (6 indices per quad)
-#endif
-#if defined(GRAPHICS_API_OPENGL_ES2)
-    unsigned short *indices;    // Vertex indices (in case vertex data comes indexed) (6 indices per quad)
-#endif
+//#endif
+//#if defined(GRAPHICS_API_OPENGL_ES2)
+//    unsigned short *indices;    // Vertex indices (in case vertex data comes indexed) (6 indices per quad)
+//#endif
     unsigned int vaoId;         // OpenGL Vertex Array Object id
     unsigned int vboId[5];      // OpenGL Vertex Buffer Objects id (5 types of vertex data)
 } rlVertexBuffer;
@@ -584,6 +588,7 @@ typedef enum {
     RL_ATTACHMENT_CUBEMAP_NEGATIVE_Z = 5,   // Framebuffer texture attachment type: cubemap, -Z side
     RL_ATTACHMENT_TEXTURE2D = 100,          // Framebuffer texture attachment type: texture2d
     RL_ATTACHMENT_RENDERBUFFER = 200,       // Framebuffer texture attachment type: renderbuffer
+    RL_ATTACHMENT_TEXTURE2D_MULTISAMPLE = 300
 } rlFramebufferAttachTextureType;
 
 // Face culling mode
@@ -3340,6 +3345,44 @@ unsigned int rlLoadTexture(const void *data, int width, int height, int format, 
     return id;
 }
 
+// Load a multisample texture (no data, only GPU allocation)
+unsigned int rlLoadTextureMultisample(int width, int height, int format, int samples)
+{
+    unsigned int id = 0;
+
+#if defined(GRAPHICS_API_OPENGL_33)
+    // Check for valid sample count
+    if (samples < 1) samples = 1;
+
+    glGenTextures(1, &id);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, id);
+
+    unsigned int glInternalFormat, glFormat, glType;
+    rlGetGlTextureFormats(format, &glInternalFormat, &glFormat, &glType);
+
+    if (glInternalFormat == 0)
+    {
+        TRACELOG(RL_LOG_WARNING, "TEXTURE: Multisample format not supported: %i", format);
+        glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+        return 0;
+    }
+
+    // Allocate multisample texture (no mipmaps, no data)
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, glInternalFormat, width, height, GL_TRUE);
+
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+
+    if (id > 0) TRACELOG(RL_LOG_INFO, "TEXTURE: [ID %i] Multisample texture loaded (%ix%i | %s | %i samples)",
+        id, width, height, rlGetPixelFormatName(format), samples);
+    else TRACELOG(RL_LOG_WARNING, "TEXTURE: Failed to load multisample texture");
+
+#else
+    TRACELOG(RL_LOG_WARNING, "TEXTURE: Multisample textures not supported on this platform");
+#endif
+
+    return id;
+}
+
 // Load depth texture/renderbuffer (to be attached to fbo)
 // WARNING: OpenGL ES 2.0 requires GL_OES_depth_texture and WebGL requires WEBGL_depth_texture extensions
 unsigned int rlLoadTextureDepth(int width, int height, bool useRenderBuffer)
@@ -3757,6 +3800,7 @@ void rlFramebufferAttach(unsigned int fboId, unsigned int texId, int attachType,
         case RL_ATTACHMENT_COLOR_CHANNEL7:
         {
             if (texType == RL_ATTACHMENT_TEXTURE2D) glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachType, GL_TEXTURE_2D, texId, mipLevel);
+            else if (texType == RL_ATTACHMENT_TEXTURE2D_MULTISAMPLE) glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachType, GL_TEXTURE_2D_MULTISAMPLE, texId, mipLevel);
             else if (texType == RL_ATTACHMENT_RENDERBUFFER) glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachType, GL_RENDERBUFFER, texId);
             else if (texType >= RL_ATTACHMENT_CUBEMAP_POSITIVE_X) glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachType, GL_TEXTURE_CUBE_MAP_POSITIVE_X + texType, texId, mipLevel);
         } break;

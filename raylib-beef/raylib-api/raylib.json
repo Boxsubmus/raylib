@@ -8528,6 +8528,29 @@
       ]
     },
     {
+      "name": "LoadRenderTexturePro",
+      "description": "Load texture for rendering (framebuffer)",
+      "returnType": "RenderTexture2D",
+      "params": [
+        {
+          "type": "int",
+          "name": "width"
+        },
+        {
+          "type": "int",
+          "name": "height"
+        },
+        {
+          "type": "int",
+          "name": "format"
+        },
+        {
+          "type": "int",
+          "name": "samples"
+        }
+      ]
+    },
+    {
       "name": "IsTextureValid",
       "description": "Check if a texture is valid (loaded in GPU)",
       "returnType": "bool",
@@ -8602,6 +8625,21 @@
         {
           "type": "const void *",
           "name": "pixels"
+        }
+      ]
+    },
+    {
+      "name": "ResolveMSAATexture",
+      "description": "",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "RenderTexture2D",
+          "name": "msaaTarget"
+        },
+        {
+          "type": "RenderTexture2D",
+          "name": "resolveTarget"
         }
       ]
     },

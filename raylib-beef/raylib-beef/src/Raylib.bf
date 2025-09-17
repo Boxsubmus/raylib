@@ -970,6 +970,10 @@ public static class Raylib
 	[CLink]
 	public static extern RenderTexture2D LoadRenderTexture(int32 width, int32 height);
 	
+	/// Load texture for rendering (framebuffer)
+	[CLink]
+	public static extern RenderTexture2D LoadRenderTexturePro(int32 width, int32 height, int32 format, int32 samples);
+	
 	/// Generate GPU mipmaps for a texture
 	[CLink]
 	public static extern void GenTextureMipmaps(Texture2D *texture);
@@ -1907,6 +1911,10 @@ public static class Raylib
 	/// Update GPU texture rectangle with new data (pixels and rec should fit in texture)
 	[CLink]
 	public static extern void UpdateTextureRec(Texture2D texture, Rectangle rec, void *pixels);
+	
+	/// 
+	[CLink]
+	public static extern void ResolveMSAATexture(RenderTexture2D msaaTarget, RenderTexture2D resolveTarget);
 	
 	/// Set texture scaling filter mode
 	[CLink]
@@ -3894,6 +3902,15 @@ public static class Raylib
 	}
 	[LinkName("UpdateTextureRec")]
 	private static extern void UpdateTextureRec_Impl(in Texture2D texture, in Rectangle rec, void *pixels);
+	
+	/// 
+	[Inline]
+	public static void ResolveMSAATexture(RenderTexture2D msaaTarget, RenderTexture2D resolveTarget)
+	{
+		ResolveMSAATexture_Impl(msaaTarget, resolveTarget);
+	}
+	[LinkName("ResolveMSAATexture")]
+	private static extern void ResolveMSAATexture_Impl(in RenderTexture2D msaaTarget, in RenderTexture2D resolveTarget);
 	
 	/// Set texture scaling filter mode
 	[Inline]

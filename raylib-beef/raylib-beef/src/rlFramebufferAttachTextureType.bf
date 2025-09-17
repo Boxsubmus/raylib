@@ -23,6 +23,8 @@ public enum rlFramebufferAttachTextureType : c_int
 	case RL_ATTACHMENT_TEXTURE2D = 100;
 	/// Framebuffer texture attachment type: renderbuffer
 	case RL_ATTACHMENT_RENDERBUFFER = 200;
+	/// 
+	case RL_ATTACHMENT_TEXTURE2D_MULTISAMPLE = 300;
 	
 	public static operator int32 (rlFramebufferAttachTextureType self) => (int32)self;
 }

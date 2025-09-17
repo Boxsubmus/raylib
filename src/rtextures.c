@@ -78,6 +78,8 @@
 #include <math.h>               // Required for: fabsf() [Used in DrawTextureRec()]
 #include <stdio.h>              // Required for: sprintf() [Used in ExportImageAsCode()]
 
+#include "external/glad.h"
+
 // Support only desired texture formats on stb_image
 #if !defined(SUPPORT_FILEFORMAT_BMP)
     #define STBI_NO_BMP
@@ -4300,6 +4302,106 @@ RenderTexture2D LoadRenderTexture(int width, int height)
     else TRACELOG(LOG_WARNING, "FBO: Framebuffer object can not be created");
 
     return target;
+}
+
+RenderTexture2D LoadRenderTexturePro(int width, int height, int format, int samples)
+{
+    RenderTexture2D target = { 0 };
+
+    target.id = rlLoadFramebuffer(); // Load an empty framebuffer
+
+    if (target.id > 0)
+    {
+#if false
+        rlEnableFramebuffer(target.id);
+
+        glBindTexture(GL_TEXTURE_2D, 0);    // Free any old binding
+
+        // Create color texture (default to RGBA)
+        // target.texture.id = rlLoadTexture(NULL, width, height, format, 1);
+
+        glGenTextures(1, &target.texture.id);
+        glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, target.texture.id);
+        glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGBA8, width, height, GL_TRUE);
+        glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+
+        target.texture.width = width;
+        target.texture.height = height;
+        target.texture.format = format;
+        target.texture.mipmaps = 1;
+
+        // Attach color
+        glBindFramebuffer(GL_FRAMEBUFFER, &target.texture.id);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, target.texture.id, 0);
+        glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+
+        // ---- Depth buffer (multisampled renderbuffer) ----
+        glGenRenderbuffers(1, &target.depth.id);
+        glBindRenderbuffer(GL_RENDERBUFFER, target.depth.id);
+        glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH24_STENCIL8, width, height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, target.depth.id);
+
+        /*
+        // Create depth renderbuffer/texture
+        target.depth.id = rlLoadTextureDepth(width, height, true);
+        target.depth.width = width;
+        target.depth.height = height;
+        target.depth.format = 19;       //DEPTH_COMPONENT_24BIT?
+        target.depth.mipmaps = 1;
+
+        // Attach color texture and depth renderbuffer/texture to FBO
+        rlFramebufferAttach(target.id, target.texture.id, RL_ATTACHMENT_COLOR_CHANNEL0, RL_ATTACHMENT_TEXTURE2D, 0);
+        rlFramebufferAttach(target.id, target.depth.id, RL_ATTACHMENT_DEPTH, RL_ATTACHMENT_RENDERBUFFER, 0);
+        */
+
+        // Check if fbo is complete with attachments (valid)
+        if (rlFramebufferComplete(target.id)) TRACELOG(LOG_INFO, "FBO: [ID %i] Framebuffer object created successfully", target.id);
+
+        rlDisableFramebuffer();
+#else
+        rlEnableFramebuffer(target.id);
+
+        // Create color texture (default to RGBA)
+        target.texture.id = rlLoadTextureMultisample(width, height, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8, samples);
+        target.texture.width = width;
+        target.texture.height = height;
+        target.texture.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
+        target.texture.mipmaps = 1;
+
+        // Create depth renderbuffer/texture
+        target.depth.id = rlLoadTextureDepth(width, height, true);
+        target.depth.width = width;
+        target.depth.height = height;
+        target.depth.format = 19;       //DEPTH_COMPONENT_24BIT?
+        target.depth.mipmaps = 1;
+
+        // Attach color texture and depth renderbuffer/texture to FBO
+        rlFramebufferAttach(target.id, target.texture.id, RL_ATTACHMENT_COLOR_CHANNEL0, RL_ATTACHMENT_TEXTURE2D_MULTISAMPLE, 0);
+        rlFramebufferAttach(target.id, target.depth.id, RL_ATTACHMENT_DEPTH, RL_ATTACHMENT_RENDERBUFFER, 0);
+
+        // Check if fbo is complete with attachments (valid)
+        if (rlFramebufferComplete(target.id)) TRACELOG(LOG_INFO, "FBO: [ID %i] Framebuffer object created successfully", target.id);
+
+        rlDisableFramebuffer();
+#endif
+    }
+    else TRACELOG(LOG_WARNING, "FBO: Framebuffer object can not be created");
+
+    return target;
+}
+
+void ResolveMSAATexture(RenderTexture2D msaaTarget, RenderTexture2D resolveTarget)
+{
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaTarget.id);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolveTarget.id);
+
+    glBlitFramebuffer(
+        0, 0, msaaTarget.texture.width, msaaTarget.texture.height,
+        0, 0, resolveTarget.texture.width, resolveTarget.texture.height,
+        GL_COLOR_BUFFER_BIT, GL_NEAREST
+    );
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 // Check if a texture is valid (loaded in GPU)
