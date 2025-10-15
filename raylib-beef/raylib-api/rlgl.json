@@ -717,6 +717,26 @@
           "description": "Vertex indices (in case vertex data comes indexed) (6 indices per quad)"
         },
         {
+          "type": "#if defined(GRAPHICS_API_OPENGL_ES2)",
+          "name": "normals",
+          "description": "Vertex normal (XYZ - 3 components per vertex) (shader-location = 2)"
+        },
+        {
+          "type": "unsigned short *",
+          "name": "indices",
+          "description": "Vertex indices (in case vertex data comes indexed) (6 indices per quad)"
+        },
+        {
+          "type": "#endif",
+          "name": "vaoId",
+          "description": "OpenGL Vertex Array Object id"
+        },
+        {
+          "type": "*/",
+          "name": "vaoId",
+          "description": "OpenGL Vertex Array Object id"
+        },
+        {
           "type": "unsigned int",
           "name": "vaoId",
           "description": "OpenGL Vertex Array Object id"
@@ -1416,11 +1436,6 @@
           "name": "RL_ATTACHMENT_RENDERBUFFER",
           "value": 200,
           "description": "Framebuffer texture attachment type: renderbuffer"
-        },
-        {
-          "name": "RL_ATTACHMENT_TEXTURE2D_MULTISAMPLE",
-          "value": 300,
-          "description": ""
         }
       ]
     },

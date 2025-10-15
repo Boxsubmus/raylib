@@ -1218,7 +1218,7 @@ RLAPI float GetMouseWheelMove(void);                          // Get mouse wheel
 RLAPI Vector2 GetMouseWheelMoveV(void);                       // Get mouse wheel movement for both X and Y
 RLAPI void SetMouseCursor(int cursor);                        // Set mouse cursor
 RLAPI void SetMouseCursorEx(CustomCursor cursor);
-RLAPI CustomCursor LoadMouseCursorFromImage(Image image);
+RLAPI CustomCursor LoadMouseCursorFromImage(Image image, int xHot, int yHot);
 RLAPI void UnloadMouseCursor(CustomCursor cursor);
 
 // Input-related functions: touch

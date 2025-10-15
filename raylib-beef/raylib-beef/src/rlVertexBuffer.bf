@@ -25,12 +25,12 @@ public struct rlVertexBuffer
 	public void* indices;
 	
 	/// OpenGL Vertex Array Object id
-	public int32 vaoId;
+	public void* vaoId;
 	
 	/// OpenGL Vertex Buffer Objects id (5 types of vertex data)
 	public int32[5] vboId;
 	
-	public this(int32 elementCount, void* vertices, void* texcoords, void* normals, void* colors, void* indices, int32 vaoId, int32[5] vboId)
+	public this(int32 elementCount, void* vertices, void* texcoords, void* normals, void* colors, void* indices, void* vaoId, int32[5] vboId)
 	{
 		this.elementCount = elementCount;
 		this.vertices = vertices;

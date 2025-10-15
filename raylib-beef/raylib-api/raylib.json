@@ -5235,6 +5235,14 @@
         {
           "type": "Image",
           "name": "image"
+        },
+        {
+          "type": "int",
+          "name": "xHot"
+        },
+        {
+          "type": "int",
+          "name": "yHot"
         }
       ]
     },
