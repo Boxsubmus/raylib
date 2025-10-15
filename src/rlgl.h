@@ -388,12 +388,18 @@ typedef struct rlVertexBuffer {
     float *texcoords;           // Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
     float *normals;             // Vertex normal (XYZ - 3 components per vertex) (shader-location = 2)
     unsigned char *colors;      // Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-#if defined(GRAPHICS_API_OPENGL_11) || defined(GRAPHICS_API_OPENGL_33)
+
+    // @pelly
+    // This was breaking the generator, tbh, I probably should handle this case
+    // But for now, we never intend to actually support ES2, so I guess it's fine...
+// #if defined(GRAPHICS_API_OPENGL_11) || defined(GRAPHICS_API_OPENGL_33)
     unsigned int *indices;      // Vertex indices (in case vertex data comes indexed) (6 indices per quad)
-#endif
+// #endif
+    /*
 #if defined(GRAPHICS_API_OPENGL_ES2)
     unsigned short *indices;    // Vertex indices (in case vertex data comes indexed) (6 indices per quad)
 #endif
+*/
     unsigned int vaoId;         // OpenGL Vertex Array Object id
     unsigned int vboId[5];      // OpenGL Vertex Buffer Objects id (5 types of vertex data)
 } rlVertexBuffer;

@@ -1406,7 +1406,7 @@ public static class Raylib
 	
 	/// 
 	[CLink]
-	public static extern CustomCursor LoadMouseCursorFromImage(Image image);
+	public static extern CustomCursor LoadMouseCursorFromImage(Image image, int32 xHot, int32 yHot);
 	
 	/// 
 	[CLink]
@@ -2763,12 +2763,12 @@ public static class Raylib
 	
 	/// 
 	[Inline]
-	public static CustomCursor LoadMouseCursorFromImage(Image image)
+	public static CustomCursor LoadMouseCursorFromImage(Image image, int32 xHot, int32 yHot)
 	{
-		return LoadMouseCursorFromImage_Impl(image);
+		return LoadMouseCursorFromImage_Impl(image, xHot, yHot);
 	}
 	[LinkName("LoadMouseCursorFromImage")]
-	private static extern CustomCursor LoadMouseCursorFromImage_Impl(in Image image);
+	private static extern CustomCursor LoadMouseCursorFromImage_Impl(in Image image, int32 xHot, int32 yHot);
 	
 	/// 
 	[Inline]

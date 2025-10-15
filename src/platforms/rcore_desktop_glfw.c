@@ -1165,7 +1165,7 @@ void SetMouseCursorEx(CustomCursor cursor)
     glfwSetCursor(platform.handle, cursor.cursorObj);
 }
 
-CustomCursor LoadMouseCursorFromImage(Image image)
+CustomCursor LoadMouseCursorFromImage(Image image, int xHot, int yHot)
 {
     CustomCursor ret = { 0 };
 
@@ -1174,7 +1174,7 @@ CustomCursor LoadMouseCursorFromImage(Image image)
     glfwimage.height = image.height;
     glfwimage.pixels = (unsigned char*)image.data;
 
-    ret.cursorObj = glfwCreateCursor(&glfwimage, 0, 0);
+    ret.cursorObj = glfwCreateCursor(&glfwimage, xHot, yHot);
 
     return ret;
 }
